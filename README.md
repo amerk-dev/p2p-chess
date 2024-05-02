@@ -1,35 +1,38 @@
-# Online-Chess
+# P2P-Chess
 
-Online Chess game made using pygame and websockets. Play against opponents through the web easily. 
+p2p Шахматы с использованием pygame и веб-сокетов для игры через интернет
 
-## Requirements to play the game:
+## Требования для игры:
 
-1. pygame installed, if not you can create a virtual environment using
+1. Создать виртуальную среду, используя
 ```
 python3 -m venv venv
 ```
- Now you can install pygame using pip:
+2. Установить pygame, используя pip:
 ```
 pip install pygame
 ```
 
 
-## How to play the game:
+## Как играть в игру:
 
-1. First clone this repository using ssh or typing the following in command line: 
-
-```
-git clone https://github.com/LunarFang416/online-chess.git
-```
-
-2. Run the server:
+1. Клонируйте этот репозиторий, набрав в командной строке:
 
 ```
-python3 ./server.py
+https://github.com/amerk-dev/p2p-chess.git
 ```
 
-3. In a separate terminal, run your game:
+2. Запустите сервер:
 
 ```
-python3 ./test.py
+py server.py
 ```
+
+3. В отдельном терминале запустите игру:
+
+```
+py test.py
+```
+
+# Демонстрация
+![img.png](img.png)
