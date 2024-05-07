@@ -1,9 +1,10 @@
 import pygame
 from board import Board
 from sys import exit
+import os
 from client import Client
 
-WIDTH, HEIGHT = 620, 700
+WIDTH, HEIGHT = 800, 700
 BOARD_WIDTH, BOARD_HEIGHT = 600, 600
 X_OFFSET, Y_OFFSET = int((WIDTH - BOARD_WIDTH) / 2), int((HEIGHT - BOARD_HEIGHT) / 2)
 MOVE_PLAYED = "!MOVE_PLAYED"
@@ -40,8 +41,35 @@ def check_if_checkmate():
     return False
 
 
-def display_captured_pieces():
-    pass
+def load_piece_images():
+    piece_images = {}
+    piece_types = ['King', 'Queen', 'Bishop', 'Knight', 'Rook', 'Pawn']
+    for color in ['white', 'black']:
+        for piece_type in piece_types:
+            image_path = os.path.join("piecess", f"{color}_{piece_type.lower()}.png")
+            piece_images[f"{color}_{piece_type}"] = pygame.image.load(image_path)
+    return piece_images
+
+piece_images = load_piece_images()
+
+def display_captured_pieces(screen):
+    white_captured_area = (WIDTH - X_OFFSET + 50, 50)
+    black_captured_area = (WIDTH - X_OFFSET + 50, HEIGHT - 250)
+
+    white_captured_pieces = client.board.white_captured
+    for i, piece in enumerate(white_captured_pieces):
+        piece_name = f"white_{type(piece).__name__}"
+        piece_image = piece_images[piece_name]
+        screen.blit(piece_image, (white_captured_area[0], white_captured_area[1] + 20 * i))
+
+    black_captured_pieces = client.board.black_captured
+    for i, piece in enumerate(black_captured_pieces):
+        piece_name = f"black_{type(piece).__name__}"
+        piece_image = piece_images[piece_name]
+        screen.blit(piece_image, (black_captured_area[0], black_captured_area[1] + 20 * i))
+
+
+
 
 
 board = connect()
@@ -89,6 +117,8 @@ while True:
             text(screen, "ПОБЕДА :)", 'green', WIDTH / 2, 20)
         else:
             text(screen, "ПОРАЖЕНИЕ :(", 'red', WIDTH / 2, 20)
+
+    display_captured_pieces(screen)
 
     pygame.display.update()
     clock.tick(60)
