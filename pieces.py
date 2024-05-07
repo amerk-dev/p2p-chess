@@ -180,7 +180,7 @@ class Pawn(ChessPiece):
             return (reg_moves, elim_moves)
 
 class Knight(ChessPiece):
-    directions = [[2, 1], [2, -1], [-2, -1], [-2, 1], [-1, 2], [-1, -2], [1, 2], [-1, 2]]
+    directions = [[2, 1], [2, -1], [-2, -1], [-2, 1], [-1, 2], [-1, -2], [1, 2], [1, -2]]
     COLOR = [BLACK_KNIGHT_IMAGE, WHITE_KNIGHT_IMAGE]
 
     def __init__(self, x_pos: int, y_pos: int, color: int, **kwargs):
