@@ -4,7 +4,7 @@ from sys import exit
 import os
 from client import Client
 
-WIDTH, HEIGHT = 800, 700
+WIDTH, HEIGHT = 700, 800
 BOARD_WIDTH, BOARD_HEIGHT = 600, 600
 X_OFFSET, Y_OFFSET = int((WIDTH - BOARD_WIDTH) / 2), int((HEIGHT - BOARD_HEIGHT) / 2)
 MOVE_PLAYED = "!MOVE_PLAYED"
@@ -53,20 +53,20 @@ def load_piece_images():
 piece_images = load_piece_images()
 
 def display_captured_pieces(screen):
-    white_captured_area = (WIDTH - X_OFFSET + 50, 50)
-    black_captured_area = (WIDTH - X_OFFSET + 50, HEIGHT - 250)
+    white_captured_area = (50, 50)
+    black_captured_area = (50, HEIGHT - 100)
 
     white_captured_pieces = client.board.white_captured
     for i, piece in enumerate(white_captured_pieces):
         piece_name = f"white_{type(piece).__name__}"
         piece_image = piece_images[piece_name]
-        screen.blit(piece_image, (white_captured_area[0], white_captured_area[1] + 20 * i))
+        screen.blit(piece_image, (white_captured_area[0] + 25 * i, white_captured_area[1]))
 
     black_captured_pieces = client.board.black_captured
     for i, piece in enumerate(black_captured_pieces):
         piece_name = f"black_{type(piece).__name__}"
         piece_image = piece_images[piece_name]
-        screen.blit(piece_image, (black_captured_area[0], black_captured_area[1] + 20 * i))
+        screen.blit(piece_image, (black_captured_area[0] + 25 * i, black_captured_area[1]))
 
 
 
