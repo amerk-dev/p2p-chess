@@ -1,8 +1,10 @@
+import tkinter
 import pygame
 from board import Board
 from sys import exit
 import os
 from client import Client
+from tkinter import messagebox
 
 WIDTH, HEIGHT = 700, 800
 BOARD_WIDTH, BOARD_HEIGHT = 600, 600
@@ -13,7 +15,11 @@ GAME_OVER = "!GAME_OVER"
 
 pygame.init()
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Шахматы")
 clock = pygame.time.Clock()
+
+BUTTON_WIDTH, BUTTON_HEIGHT = 100, 30
+BUTTON_X, BUTTON_Y = (WIDTH - BUTTON_WIDTH) // 2, HEIGHT - BUTTON_HEIGHT - 20
 
 
 def connect():
@@ -69,8 +75,19 @@ def display_captured_pieces(screen):
         screen.blit(piece_image, (black_captured_area[0] + 25 * i, black_captured_area[1]))
 
 
+def show_info():
+    root = tkinter.Tk()
+    root.withdraw()
+    messagebox.showinfo('Информация о программе', 'bla-bla-bla')
+    root.destroy()
 
 
+def draw_button(screen, x, y, width, height, text):
+    pygame.draw.rect(screen, (0, 0, 0), (x, y, width, height), 2)
+    font = pygame.font.Font(None, 18)
+    text_surface = font.render(text, True, (0, 0, 0))
+    text_rect = text_surface.get_rect(center=(x + width // 2, y + height // 2))
+    screen.blit(text_surface, text_rect)
 
 board = connect()
 
@@ -83,22 +100,25 @@ while True:
             client.disconnect()
             pygame.quit()
             exit()
-        if event.type == pygame.MOUSEBUTTONDOWN and client.game >= 2 and client.your_move and (not client.game_over):
-            x, y = event.pos
-            x, y = x - X_OFFSET, y - Y_OFFSET
-            # Sending it in y - 50, and x - 50 to align coordinates
-            if 0 <= x <= BOARD_WIDTH and 0 <= y <= BOARD_HEIGHT:
-                move = board.select_sqaure(y, x)
-                if move == MOVE_PLAYED:
-                    if not check_if_checkmate():
-                        client.your_move = False
-                        client.send({"type": BOARD_UPDATE,
-                                     "data":
-                                         {
-                                             "board": client.board.board,
-                                             "white_captured": client.board.white_captured,
-                                             "black_captured": client.board.black_captured}
-                                     })
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_x, mouse_y = event.pos
+            if client.game >= 2 and client.your_move and (not client.game_over):
+                x, y = mouse_x - X_OFFSET, mouse_y - Y_OFFSET
+                if 0 <= x <= BOARD_WIDTH and 0 <= y <= BOARD_HEIGHT:
+                    move = board.select_sqaure(y, x)
+                    if move == MOVE_PLAYED:
+                        if not check_if_checkmate():
+                            client.your_move = False
+                            client.send({"type": BOARD_UPDATE,
+                                         "data":
+                                             {
+                                                 "board": client.board.board,
+                                                 "white_captured": client.board.white_captured,
+                                                 "black_captured": client.board.black_captured}
+                                         })
+            # Check if the info button is clicked
+            if BUTTON_X <= mouse_x <= BUTTON_X + BUTTON_WIDTH and BUTTON_Y <= mouse_y <= BUTTON_Y + BUTTON_HEIGHT:
+                show_info()
 
     screen.fill("white")
     board.draw(surf)
@@ -119,6 +139,6 @@ while True:
             text(screen, "ПОРАЖЕНИЕ :(", 'red', WIDTH / 2, 20)
 
     display_captured_pieces(screen)
-
+    draw_button(screen, BUTTON_X, BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT, "Информация")
     pygame.display.update()
     clock.tick(60)
